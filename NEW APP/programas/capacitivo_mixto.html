@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="../estilos/estilos_tipos.css">
+    <script src="../jquery/dist/jquery.min.js"></script>
+    <title>CAPACITIVOS MIXTO</title>
+</head>
+<body>
+    <div id="instrucciones"> 
+        <center>INSTRUCCIONES</center>
+        <br/>
+        <li>Elige capacitancias en serie</li>
+        <br/>
+        <li>Elige capacitancias en paralelo</li>
+        <br/>
+        <li>Asigna valores a cada capacitancia</li>
+        <br/>
+        <li>Pulsa en el boton calcular y la aplicacion realizara el resto</li>
+        <br/><br/>
+        <center> <input type="button" id="boton_instrucciones" value="¡Lo tengo!"> </center>
+        <br/><br/>
+    </div>
+
+    <header>
+        <a href="../index.html"><img id="atras" src="../imagenes/flecha_retroceder.png"></a> &nbsp; <h3>CIRCUITOS CAPACITIVOS MIXTOS</h3>
+    </header>
+    <br/>
+    <div id="proceso">
+        
+        <h5>Fórmula para resolver en paralelo: CT = C1 + C2...</h5>
+        <h5>Fórmula para resolver en serie: 1/(1/C1 + 1/C2...)</h5>
+        
+         <!--CONVERTIDOR DE UNIDADES-->
+         <center>Convertir</center>
+         <input id="mF" class="inputs_conversion" type="number" placeholder="mF"> a <input id="mF_F" class="inputs_conversion" type="button" value="F">
+         <br/>
+         <input id="kF" class="inputs_conversion" type="number" placeholder="kF"> a <input id="kF_F" class="inputs_conversion" type="button" value="F">
+         <br/><br/>
+         <div id="resultado_conversion">
+ 
+         </div>
+        <br/><br/>
+        Numero de capacitancias a manejar
+        <br/><br/>
+
+        <select id="opciones_serie" Onchange="opciones();"  Onchange="calcular();">
+            <option>Numero capacitancias serie</option>
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+        </select>
+        <br/><br/>
+        <select id="opciones_paralelo" Onchange="opciones();"  Onchange="calcular();">
+            <option>Numero capacitancias paralelo</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+        </select>
+
+        <br/><br/>
+        
+        <p class="mensajes_circuitos" id="mensaje_serie">CAPACITANCIAS EN SERIE DEL CIRCUITO</p>
+        <br/>
+        <p id="r_1_serie">capacitancia SERIE #1 &nbsp; <input id="resistencia_1_serie" type="number" placeholder="FARADIOS"></p>
+        <p id="r_2_serie">capacitancia SERIE #2 &nbsp; <input id="resistencia_2_serie" type="number" placeholder="FARADIOS"></p>
+        <p id="r_3_serie">capacitancia SERIE #3 &nbsp; <input id="resistencia_3_serie" type="number" placeholder="FARADIOS"></p>
+        <p id="r_4_serie">capacitancia SERIE #4 &nbsp; <input id="resistencia_4_serie" type="number" placeholder="FARADIOS"></p>
+        <br/><br/>
+        <br/>
+        <p class="mensajes_circuitos" id="mensaje_paralelo">CAPACITANCIAS EN PARALELO DEL CIRCUITO</p>
+        <p id="r_1_paralelo">capacitancia PARALELO #1 &nbsp; <input id="resistencia_1_paralelo" type="number" placeholder="FARADIOS"></p>
+        <p id="r_2_paralelo">capacitancia PARALELO #2 &nbsp; <input id="resistencia_2_paralelo" type="number" placeholder="FARADIOS"></p>
+        <p id="r_3_paralelo">capacitancia PARALELO #3 &nbsp; <input id="resistencia_3_paralelo" type="number" placeholder="FARADIOS"></p>
+        <p id="r_4_paralelo">capacitancia PARALELO #4 &nbsp; <input id="resistencia_4_paralelo" type="number" placeholder="FARADIOS"></p>
+
+        <br/>
+        <div id="resultado">
+         
+        </div>
+
+        <select id="unidades_medida" Onchange="calcular();">
+            <option>Convertir resultado a :</option>
+            <option>FARADIOS</option>
+            <option>MILIFARADIOS</option>
+            <option>KILOFARADIOS</option>
+        </select>
+
+        <br/><br/>
+
+        <input type="button" value="Calcular" id="calcular">
+
+    </div>
+    <script type="text/javascript">
+
+        //Inicia logica para convertir unidades
+        var mF_F=document.querySelector("#mF_F");
+        var kF_F=document.querySelector("#kF_F");
+        var kF=document.querySelector("#kF");
+        var mF=document.querySelector("#mF");
+        var resultado_conversion=document.querySelector("#resultado_conversion");
+
+        mF_F.addEventListener("click",mf,false);
+        kF_F.addEventListener("click",kf,false);
+
+        function mf(){
+                var conversion=mF.value/1000;
+                resultado_conversion.innerHTML="Tus "+mF.value+" mF equivalen a "+conversion+" F";
+        }
+        
+        function kf(){
+                var conversion=kF.value/0.001;
+                resultado_conversion.innerHTML="Tus "+kF.value+" kF equivalen a "+conversion+" F";
+        }
+        //Finaliza logica para convertir unidades
+       
+        var boton_instrucciones=document.querySelector("#boton_instrucciones");
+        var instrucciones=document.querySelector("#instrucciones");
+
+        boton_instrucciones.addEventListener("click",quitar_instrucciones,false);
+
+        function quitar_instrucciones(){
+            instrucciones.style.display="none";
+        }
+    
+
+       //FUNCION PARA GUARDAR EL VALOR DEL SELECT Y MOSTRAR SUS OPCIONES
+       function opciones(){
+            //ME GUARDA EL NUMERO DE LAS OPCIONES EN SERIE EN AMBAS VARIABLES
+            var resistencias_serie=document.querySelector("#opciones_serie"); //Me guarda el elemento a_convertir en una variable
+            var numero_resistencias_serie=resistencias_serie.options[resistencias_serie.selectedIndex].text; 
+
+            //ME GUARDA EL NUMERO DE LAS OPCIONES EN PARALELO EN AMBAS VARIABLES
+            var resistencias_paralelo=document.querySelector("#opciones_paralelo");
+            var numero_resistencias_paralelo=resistencias_paralelo.options[resistencias_paralelo.selectedIndex].text;
+
+            var calcular=document.getElementById("calcular");
+            /*var resistencia_1_serie=document.querySelector("#resistencia_1_serie");
+            var resistencia_2_serie=document.querySelector("#resistencia_2_serie");
+            var resistencia_3_serie=document.querySelector("#resistencia_3_serie");
+            var resistencia_4_serie=document.querySelector("#resistencia_4_serie");*/
+            /*var resistencia_1_paralelo=document.querySelector("#resistencia_1_paralelo");
+            var resistencia_2_paralelo=document.querySelector("#resistencia_2_paralelo");
+            var resistencia_3_paralelo=document.querySelector("#resistencia_3_paralelo");
+            var resistencia_4_paralelo=document.querySelector("#resistencia_4_paralelo");*/
+            var r_1_serie= document.querySelector("#r_1_serie");
+            var r_2_serie= document.querySelector("#r_2_serie");
+            var r_3_serie= document.querySelector("#r_3_serie");
+            var r_4_serie= document.querySelector("#r_4_serie");
+            var r_1_paralelo= document.querySelector("#r_1_paralelo");
+            var r_2_paralelo= document.querySelector("#r_2_paralelo");
+            var r_3_paralelo= document.querySelector("#r_3_paralelo");
+            var r_4_paralelo= document.querySelector("#r_4_paralelo");
+           // var resultado_1=(parseFloat(resistencia_1.value));
+            
+            var resultado=document.querySelector("#resultado");
+           //MOSTRAR MENSAJE PARA RESISTENCIAS EN SERIE
+           if(numero_resistencias_serie=="1" ||numero_resistencias_serie=="2" ||numero_resistencias_serie=="3" ||numero_resistencias_serie=="4"){
+                document.querySelector("#mensaje_serie").style.display="inline";
+           }
+
+           //MOSTRAR OPCCIONES EN SERIE
+            if(numero_resistencias_serie=="Numero resistencias serie"){
+                r_1_serie.style.display="none";
+                r_2_serie.style.display="none";
+                r_3_serie.style.display="none";
+                r_4_serie.style.display="none";
+                document.querySelector("#mensaje_serie").style.display="none";
+                calcular.style.display="none";
+            }else if(numero_resistencias_serie=="1"){
+                r_1_serie.style.display="block";
+                r_2_serie.style.display="none";
+                r_3_serie.style.display="none";
+                r_4_serie.style.display="none";
+                calcular.style.display="inline";
+            }else if(numero_resistencias_serie=="2"){
+                r_1_serie.style.display="block";
+                r_2_serie.style.display="block";
+                r_3_serie.style.display="none";
+                r_4_serie.style.display="none";
+                calcular.style.display="inline";
+            }else if(numero_resistencias_serie=="3"){
+                r_1_serie.style.display="block";
+                r_2_serie.style.display="block";
+                r_3_serie.style.display="block";
+                r_4_serie.style.display="none";
+                calcular.style.display="inline";
+            }else if(numero_resistencias_serie=="4"){
+                r_1_serie.style.display="block";
+                r_2_serie.style.display="block";
+                r_3_serie.style.display="block";
+                r_4_serie.style.display="block";
+                calcular.style.display="inline";
+            }
+
+            //MOSTRAR MENSAJE PARA RESISTENCIAS EN PARALELO
+           if(numero_resistencias_paralelo=="1" ||numero_resistencias_paralelo=="2" ||numero_resistencias_paralelo=="3" ||numero_resistencias_paralelo=="4"){
+                document.querySelector("#mensaje_paralelo").style.display="inline";
+           }
+
+            //MOSTRAR OPCCIONES EN PARALELO
+            if(numero_resistencias_paralelo=="Numero resistencias paralelo"){
+                r_1_paralelo.style.display="none";
+                r_2_paralelo.style.display="none";
+                r_3_paralelo.style.display="none";
+                r_4_paralelo.style.display="none";
+                document.querySelector("#mensaje_paralelo").style.display="none";
+                calcular.style.display="none";
+            }else if(numero_resistencias_paralelo=="2"){
+                r_1_paralelo.style.display="block";
+                r_2_paralelo.style.display="block";
+                r_3_paralelo.style.display="none";
+                r_4_paralelo.style.display="none";
+                calcular.style.display="inline";
+            }else if(numero_resistencias_paralelo=="3"){
+                r_1_paralelo.style.display="block";
+                r_2_paralelo.style.display="block";
+                r_3_paralelo.style.display="block";
+                r_4_paralelo.style.display="none";
+                calcular.style.display="inline";
+            }else if(numero_resistencias_paralelo=="4"){
+                r_1_paralelo.style.display="block";
+                r_2_paralelo.style.display="block";
+                r_3_paralelo.style.display="block";
+                r_4_paralelo.style.display="block";
+                calcular.style.display="inline";
+            }
+        }
+    
+        document.getElementById("calcular").addEventListener("click",calcular,false);
+    //FUNCION PARA CALCULAR CIRCUITOS    
+       function calcular(){
+        
+        var resistencias_serie=document.querySelector("#opciones_serie"); //Me guarda el elemento a_convertir en una variable
+        var numero_resistencias_serie=resistencias_serie.options[resistencias_serie.selectedIndex].text; 
+
+        var resistencias_paralelo=document.querySelector("#opciones_paralelo");
+        var numero_resistencias_paralelo=resistencias_paralelo.options[resistencias_paralelo.selectedIndex].text;
+
+        var unidades=document.querySelector("#unidades_medida"); //Me guarda el elemento unidades_medida en una variable
+        var tipo_unidad=unidades.options[unidades.selectedIndex].text; 
+           //SULUCION DE RESISTENCIAS EN PARALELO
+        /*var resistencias=document.querySelector("#opciones"); //Me guarda el elemento a_convertir en una variable
+        var numero_resistencias=resistencias.options[resistencias.selectedIndex].text; 
+        var resultado_1=(parseFloat(resistencia_1.value));
+        var resultado_2=(parseFloat(resistencia_1.value)+parseFloat(resistencia_2.value));
+        var resultado_3=(parseFloat(resistencia_1.value)+parseFloat(resistencia_2.value)+parseFloat(resistencia_3.value));
+        var resultado_4=(parseFloat(resistencia_1.value)+parseFloat(resistencia_2.value)+parseFloat(resistencia_3.value)+parseFloat(resistencia_4.value));
+        var resultado_5=(parseFloat(resistencia_1.value)+parseFloat(resistencia_2.value)+parseFloat(resistencia_3.value)+parseFloat(resistencia_4.value)+parseFloat(resistencia_5.value));
+        var resultado_6=(parseFloat(resistencia_1.value)+parseFloat(resistencia_2.value)+parseFloat(resistencia_3.value)+parseFloat(resistencia_4.value)+parseFloat(resistencia_5.value)+parseFloat(resistencia_6.value));*/
+        
+        var resistencia_1_paralelo=document.querySelector("#resistencia_1_paralelo");
+        var resistencia_2_paralelo=document.querySelector("#resistencia_2_paralelo");
+        var resistencia_3_paralelo=document.querySelector("#resistencia_3_paralelo");
+        var resistencia_4_paralelo=document.querySelector("#resistencia_4_paralelo");
+
+        var resistencia_1_serie=document.querySelector("#resistencia_1_serie");
+        var resistencia_2_serie=document.querySelector("#resistencia_2_serie");
+        var resistencia_3_serie=document.querySelector("#resistencia_3_serie");
+        var resistencia_4_serie=document.querySelector("#resistencia_4_serie");
+
+        /*resultado_paralelo=(parseFloat(1/((1/resistencia_2_paralelo.value)+parseFloat(1/resistencia_3_paralelo.value))));
+        var resultado_serie_1=(parseFloat(1/((1/resistencia_1_serie.value)+parseFloat(1/resistencia_2_serie.value))));
+        var resultado_serie_2=(parseFloat(1/((1/resistencia_1_serie.value)+parseFloat(1/resistencia_2_serie.value)+parseFloat(1/resistencia_3_serie.value))));
+        var resultado_serie_3=(parseFloat(1/((1/resistencia_1_paralelo.value)+parseFloat(1/resistencia_2_paralelo.value)+parseFloat(1/resistencia_3_paralelo.value)+parseFloat(1/resistencia_4_paralelo.value))));
+        var resultado_serie_4=(parseFloat(1/((1/resistencia_1_paralelo.value)+parseFloat(1/resistencia_2_paralelo.value)+parseFloat(1/resistencia_3_paralelo.value)+parseFloat(1/resistencia_4_paralelo.value))));*/
+        
+        var resultado_paralelo_1=(parseFloat(resistencia_1_paralelo.value));
+        var resultado_paralelo_2=(parseFloat(resistencia_1_paralelo.value)+parseFloat(resistencia_2_paralelo.value));
+        var resultado_paralelo_3=(parseFloat(resistencia_1_serie.value)+parseFloat(resistencia_2_serie.value)+parseFloat(resistencia_3_serie.value));
+        var resultado_paralelo_4=(parseFloat(resistencia_1_serie.value)+parseFloat(resistencia_2_serie.value)+parseFloat(resistencia_3_serie.value)+parseFloat(resistencia_4_serie.value));
+        
+        unidades_medida.style.display="inline-block";
+
+        //CALCULO E IMPRESION DE RESULTADOS FINALES
+        if(numero_resistencias_serie=="1" && numero_resistencias_paralelo=="2"){
+            var resultado_final_1=(parseFloat(1/((1/resistencia_1_serie.value)+(1/resultado_paralelo_2))));
+            resultado.innerHTML="SOLUCION = "+resultado_final_1+" F";
+        }else if(numero_resistencias_serie=="1" && numero_resistencias_paralelo=="3"){
+            var resultado_final_2=(parseFloat(1/((1/resistencia_1_serie.value)+(1/resultado_paralelo_3))));
+            resultado.innerHTML="SOLUCION = "+resultado_final_3+" F";
+        }else if(numero_resistencias_serie=="1" && numero_resistencias_paralelo=="4"){
+            var resultado_final_3=(parseFloat(1/((1/resistencia_1_serie.value)+(1/resultado_paralelo_4))));
+            resultado.innerHTML="SOLUCION = "+resultado_final_3+" F";
+        }else if(numero_resistencias_serie=="2" && numero_resistencias_paralelo=="2"){
+            var resultado_final_4=(parseFloat(1/((1/resistencia_1_serie.value)+parseFloat(1/resistencia_2_serie.value)+(1/resultado_paralelo_2))));
+            resultado.innerHTML="SOLUCION = "+resultado_final_4+" F";
+        }else if(numero_resistencias_serie=="2" && numero_resistencias_paralelo=="3"){
+            var resultado_final_5=(parseFloat(1/((1/resistencia_1_serie.value)+parseFloat(1/resistencia_2_serie.value)+(1/resultado_paralelo_3))));
+            resultado.innerHTML="SOLUCION = "+resultado_final_5+" F";
+        }else if(numero_resistencias_serie=="2" && numero_resistencias_paralelo=="4"){
+            var resultado_final_6=(parseFloat(1/((1/resistencia_1_serie.value)+parseFloat(1/resistencia_2_serie.value)+(1/resultado_paralelo_4))));
+            resultado.innerHTML="SOLUCION = "+resultado_final_6+" F";
+        }else if(numero_resistencias_serie=="3" && numero_resistencias_paralelo=="2"){
+            var resultado_final_7=(parseFloat(1/((1/resistencia_1_serie.value)+parseFloat(1/resistencia_2_serie.value)+parseFloat(1/resistencia_3_serie.value)+(1/resultado_paralelo_2))));
+            resultado.innerHTML="SOLUCION = "+resultado_final_7+" F";
+        }else if(numero_resistencias_serie=="3" && numero_resistencias_paralelo=="3"){
+            var resultado_final_8=(parseFloat(1/((1/resistencia_1_serie.value)+parseFloat(1/resistencia_2_serie.value)+parseFloat(1/resistencia_3_serie.value)+(1/resultado_paralelo_3))));
+            resultado.innerHTML="SOLUCION = "+resultado_final_8+" F";
+        }else if(numero_resistencias_serie=="3" && numero_resistencias_paralelo=="4"){
+            var resultado_final_9=(parseFloat(1/((1/resistencia_1_serie.value)+parseFloat(1/resistencia_2_serie.value)+parseFloat(1/resistencia_3_serie.value)+(1/resultado_paralelo_4))));
+            resultado.innerHTML="SOLUCION = "+resultado_final_9+" F";
+        }else if(numero_resistencias_serie=="4" && numero_resistencias_paralelo=="2"){
+            var resultado_final_10=(parseFloat(1/((1/resistencia_1_serie.value)+parseFloat(1/resistencia_2_serie.value)+parseFloat(1/resistencia_3_serie.value)+parseFloat(1/resistencia_4_serie.value)+(1/resultado_paralelo_2))));
+            resultado.innerHTML="SOLUCION = "+resultado_final_10+" F";
+        }else if(numero_resistencias_serie=="4" && numero_resistencias_paralelo=="3"){
+            var resultado_final_11=(parseFloat(1/((1/resistencia_1_serie.value)+parseFloat(1/resistencia_2_serie.value)+parseFloat(1/resistencia_3_serie.value)+parseFloat(1/resistencia_4_serie.value)+(1/resultado_paralelo_3))));
+            resultado.innerHTML="SOLUCION = "+resultado_final_11+" F";;
+        }else if(numero_resistencias_serie=="4" && numero_resistencias_paralelo=="4"){
+            var resultado_final_12=(parseFloat(1/((1/resistencia_1_serie.value)+parseFloat(1/resistencia_2_serie.value)+parseFloat(1/resistencia_3_serie.value)+parseFloat(1/resistencia_4_serie.value)+(1/resultado_paralelo_4))));
+            resultado.innerHTML="SOLUCION = "+resultado_final_12+" F";
+        }
+        
+
+        //CALCULO E IMPRESION DE RESULTADOS FINALES EN FARADIOS
+        if(numero_resistencias_serie=="1" && numero_resistencias_paralelo=="2" && tipo_unidad=="FARADIOS"){
+            var resultado_final_1=(parseFloat(1/((1/resistencia_1_serie.value)+(1/resultado_paralelo_2))));
+            resultado.innerHTML="SOLUCION = "+resultado_final_1+" F";
+        }else if(numero_resistencias_serie=="1" && numero_resistencias_paralelo=="3" && tipo_unidad=="FARADIOS"){
+            var resultado_final_2=(parseFloat(1/((1/resistencia_1_serie.value)+(1/resultado_paralelo_3))));
+            resultado.innerHTML="SOLUCION = "+resultado_final_3+" F";
+        }else if(numero_resistencias_serie=="1" && numero_resistencias_paralelo=="4" && tipo_unidad=="FARADIOS"){
+            var resultado_final_3=(parseFloat(1/((1/resistencia_1_serie.value)+(1/resultado_paralelo_4))));
+            resultado.innerHTML="SOLUCION = "+resultado_final_3+" F";
+        }else if(numero_resistencias_serie=="2" && numero_resistencias_paralelo=="2" && tipo_unidad=="FARADIOS"){
+            var resultado_final_4=(parseFloat(1/((1/resistencia_1_serie.value)+parseFloat(1/resistencia_2_serie.value)+(1/resultado_paralelo_2))));
+            resultado.innerHTML="SOLUCION = "+resultado_final_4+" F";
+        }else if(numero_resistencias_serie=="2" && numero_resistencias_paralelo=="3" && tipo_unidad=="FARADIOS"){
+            var resultado_final_5=(parseFloat(1/((1/resistencia_1_serie.value)+parseFloat(1/resistencia_2_serie.value)+(1/resultado_paralelo_3))));
+            resultado.innerHTML="SOLUCION = "+resultado_final_5+" F";
+        }else if(numero_resistencias_serie=="2" && numero_resistencias_paralelo=="4" && tipo_unidad=="FARADIOS"){
+            var resultado_final_6=(parseFloat(1/((1/resistencia_1_serie.value)+parseFloat(1/resistencia_2_serie.value)+(1/resultado_paralelo_4))));
+            resultado.innerHTML="SOLUCION = "+resultado_final_6+" F";
+        }else if(numero_resistencias_serie=="3" && numero_resistencias_paralelo=="2" && tipo_unidad=="FARADIOS"){
+            var resultado_final_7=(parseFloat(1/((1/resistencia_1_serie.value)+parseFloat(1/resistencia_2_serie.value)+parseFloat(1/resistencia_3_serie.value)+(1/resultado_paralelo_2))));
+            resultado.innerHTML="SOLUCION = "+resultado_final_7+" F";
+        }else if(numero_resistencias_serie=="3" && numero_resistencias_paralelo=="3" && tipo_unidad=="FARADIOS"){
+            var resultado_final_8=(parseFloat(1/((1/resistencia_1_serie.value)+parseFloat(1/resistencia_2_serie.value)+parseFloat(1/resistencia_3_serie.value)+(1/resultado_paralelo_3))));
+            resultado.innerHTML="SOLUCION = "+resultado_final_8+" F";
+        }else if(numero_resistencias_serie=="3" && numero_resistencias_paralelo=="4" && tipo_unidad=="FARADIOS"){
+            var resultado_final_9=(parseFloat(1/((1/resistencia_1_serie.value)+parseFloat(1/resistencia_2_serie.value)+parseFloat(1/resistencia_3_serie.value)+(1/resultado_paralelo_4))));
+            resultado.innerHTML="SOLUCION = "+resultado_final_9+" F";
+        }else if(numero_resistencias_serie=="4" && numero_resistencias_paralelo=="2" && tipo_unidad=="FARADIOS"){
+            var resultado_final_10=(parseFloat(1/((1/resistencia_1_serie.value)+parseFloat(1/resistencia_2_serie.value)+parseFloat(1/resistencia_3_serie.value)+parseFloat(1/resistencia_4_serie.value)+(1/resultado_paralelo_2))));
+            resultado.innerHTML="SOLUCION = "+resultado_final_10+" F";
+        }else if(numero_resistencias_serie=="4" && numero_resistencias_paralelo=="3" && tipo_unidad=="FARADIOS"){
+            var resultado_final_11=(parseFloat(1/((1/resistencia_1_serie.value)+parseFloat(1/resistencia_2_serie.value)+parseFloat(1/resistencia_3_serie.value)+parseFloat(1/resistencia_4_serie.value)+(1/resultado_paralelo_3))));
+            resultado.innerHTML="SOLUCION = "+resultado_final_11+" F";;
+        }else if(numero_resistencias_serie=="4" && numero_resistencias_paralelo=="4" && tipo_unidad=="FARADIOS"){
+            var resultado_final_12=(parseFloat(1/((1/resistencia_1_serie.value)+parseFloat(1/resistencia_2_serie.value)+parseFloat(1/resistencia_3_serie.value)+parseFloat(1/resistencia_4_serie.value)+(1/resultado_paralelo_4))));
+            resultado.innerHTML="SOLUCION = "+resultado_final_12+" F";
+        }
+
+        //CALCULO E IMPRESION DE RESULTADOS FINALES EN KILOFARADIOS
+        if(numero_resistencias_serie=="1" && numero_resistencias_paralelo=="2" && tipo_unidad=="KILOFARADIOS"){
+            var resultado_final_1=(parseFloat(1/((1/resistencia_1_serie.value)+(1/resultado_paralelo_2))))*0.001;
+            resultado.innerHTML="SOLUCION = "+resultado_final_1+" kF";
+        }else if(numero_resistencias_serie=="1" && numero_resistencias_paralelo=="3" && tipo_unidad=="KILOFARADIOS"){
+            var resultado_final_2=(parseFloat(1/((1/resistencia_1_serie.value)+(1/resultado_paralelo_3))))*0.001;
+            resultado.innerHTML="SOLUCION = "+resultado_final_3+" kF";
+        }else if(numero_resistencias_serie=="1" && numero_resistencias_paralelo=="4" && tipo_unidad=="KILOFARADIOS"){
+            var resultado_final_3=(parseFloat(1/((1/resistencia_1_serie.value)+(1/resultado_paralelo_4))))*0.001;
+            resultado.innerHTML="SOLUCION = "+resultado_final_3+" kF";
+        }else if(numero_resistencias_serie=="2" && numero_resistencias_paralelo=="2" && tipo_unidad=="KILOFARADIOS"){
+            var resultado_final_4=(parseFloat(1/((1/resistencia_1_serie.value)+parseFloat(1/resistencia_2_serie.value)+(1/resultado_paralelo_2))))*0.001;
+            resultado.innerHTML="SOLUCION = "+resultado_final_4+" kF";
+        }else if(numero_resistencias_serie=="2" && numero_resistencias_paralelo=="3" && tipo_unidad=="KILOFARADIOS"){
+            var resultado_final_5=(parseFloat(1/((1/resistencia_1_serie.value)+parseFloat(1/resistencia_2_serie.value)+(1/resultado_paralelo_3))))*0.001;
+            resultado.innerHTML="SOLUCION = "+resultado_final_5+" kF";
+        }else if(numero_resistencias_serie=="2" && numero_resistencias_paralelo=="4" && tipo_unidad=="KILOFARADIOS"){
+            var resultado_final_6=(parseFloat(1/((1/resistencia_1_serie.value)+parseFloat(1/resistencia_2_serie.value)+(1/resultado_paralelo_4))))*0.001;
+            resultado.innerHTML="SOLUCION = "+resultado_final_6+" kF";
+        }else if(numero_resistencias_serie=="3" && numero_resistencias_paralelo=="2" && tipo_unidad=="KILOFARADIOS"){
+            var resultado_final_7=(parseFloat(1/((1/resistencia_1_serie.value)+parseFloat(1/resistencia_2_serie.value)+parseFloat(1/resistencia_3_serie.value)+(1/resultado_paralelo_2))))*0.001;
+            resultado.innerHTML="SOLUCION = "+resultado_final_7+" kF";
+        }else if(numero_resistencias_serie=="3" && numero_resistencias_paralelo=="3" && tipo_unidad=="KILOFARADIOS"){
+            var resultado_final_8=(parseFloat(1/((1/resistencia_1_serie.value)+parseFloat(1/resistencia_2_serie.value)+parseFloat(1/resistencia_3_serie.value)+(1/resultado_paralelo_3))))*0.001;
+            resultado.innerHTML="SOLUCION = "+resultado_final_8+" kF";
+        }else if(numero_resistencias_serie=="3" && numero_resistencias_paralelo=="4" && tipo_unidad=="KILOFARADIOS"){
+            var resultado_final_9=(parseFloat(1/((1/resistencia_1_serie.value)+parseFloat(1/resistencia_2_serie.value)+parseFloat(1/resistencia_3_serie.value)+(1/resultado_paralelo_4))))*0.001;
+            resultado.innerHTML="SOLUCION = "+resultado_final_9+" kF";
+        }else if(numero_resistencias_serie=="4" && numero_resistencias_paralelo=="2" && tipo_unidad=="KILOFARADIOS"){
+            var resultado_final_10=(parseFloat(1/((1/resistencia_1_serie.value)+parseFloat(1/resistencia_2_serie.value)+parseFloat(1/resistencia_3_serie.value)+parseFloat(1/resistencia_4_serie.value)+(1/resultado_paralelo_2))))*0.001;
+            resultado.innerHTML="SOLUCION = "+resultado_final_10+" kF";
+        }else if(numero_resistencias_serie=="4" && numero_resistencias_paralelo=="3" && tipo_unidad=="KILOFARADIOS"){
+            var resultado_final_11=(parseFloat(1/((1/resistencia_1_serie.value)+parseFloat(1/resistencia_2_serie.value)+parseFloat(1/resistencia_3_serie.value)+parseFloat(1/resistencia_4_serie.value)+(1/resultado_paralelo_3))))*0.001;
+            resultado.innerHTML="SOLUCION = "+resultado_final_11+" kF";;
+        }else if(numero_resistencias_serie=="4" && numero_resistencias_paralelo=="4" && tipo_unidad=="KILOFARADIOS"){
+            var resultado_final_12=(parseFloat(1/((1/resistencia_1_serie.value)+parseFloat(1/resistencia_2_serie.value)+parseFloat(1/resistencia_3_serie.value)+parseFloat(1/resistencia_4_serie.value)+(1/resultado_paralelo_4))))*0.001;
+            resultado.innerHTML="SOLUCION = "+resultado_final_12+" kF";
+        }
+
+               //CALCULO E IMPRESION DE RESULTADOS FINALES EN MILIFARADIOS
+               if(numero_resistencias_serie=="1" && numero_resistencias_paralelo=="2" && tipo_unidad=="MILIFARADIOS"){
+            var resultado_final_1=(parseFloat(1/((1/resistencia_1_serie.value)+(1/resultado_paralelo_2))))*1000;
+            resultado.innerHTML="SOLUCION = "+resultado_final_1+" mF";
+        }else if(numero_resistencias_serie=="1" && numero_resistencias_paralelo=="3" && tipo_unidad=="MILIFARADIOS"){
+            var resultado_final_2=(parseFloat(1/((1/resistencia_1_serie.value)+(1/resultado_paralelo_3))))*1000;
+            resultado.innerHTML="SOLUCION = "+resultado_final_3+" mF";
+        }else if(numero_resistencias_serie=="1" && numero_resistencias_paralelo=="4" && tipo_unidad=="MILIFARADIOS"){
+            var resultado_final_3=(parseFloat(1/((1/resistencia_1_serie.value)+(1/resultado_paralelo_4))))*1000;
+            resultado.innerHTML="SOLUCION = "+resultado_final_3+" mF";
+        }else if(numero_resistencias_serie=="2" && numero_resistencias_paralelo=="2" && tipo_unidad=="MILIFARADIOS"){
+            var resultado_final_4=(parseFloat(1/((1/resistencia_1_serie.value)+parseFloat(1/resistencia_2_serie.value)+(1/resultado_paralelo_2))))*1000;
+            resultado.innerHTML="SOLUCION = "+resultado_final_4+" mF";
+        }else if(numero_resistencias_serie=="2" && numero_resistencias_paralelo=="3" && tipo_unidad=="MILIFARADIOS"){
+            var resultado_final_5=(parseFloat(1/((1/resistencia_1_serie.value)+parseFloat(1/resistencia_2_serie.value)+(1/resultado_paralelo_3))))*1000;
+            resultado.innerHTML="SOLUCION = "+resultado_final_5+" mF";
+        }else if(numero_resistencias_serie=="2" && numero_resistencias_paralelo=="4" && tipo_unidad=="MILIFARADIOS"){
+            var resultado_final_6=(parseFloat(1/((1/resistencia_1_serie.value)+parseFloat(1/resistencia_2_serie.value)+(1/resultado_paralelo_4))))*1000;
+            resultado.innerHTML="SOLUCION = "+resultado_final_6+" mF";
+        }else if(numero_resistencias_serie=="3" && numero_resistencias_paralelo=="2" && tipo_unidad=="MILIFARADIOS"){
+            var resultado_final_7=(parseFloat(1/((1/resistencia_1_serie.value)+parseFloat(1/resistencia_2_serie.value)+parseFloat(1/resistencia_3_serie.value)+(1/resultado_paralelo_2))))*1000;
+            resultado.innerHTML="SOLUCION = "+resultado_final_7+" mF";
+        }else if(numero_resistencias_serie=="3" && numero_resistencias_paralelo=="3" && tipo_unidad=="MILIFARADIOS"){
+            var resultado_final_8=(parseFloat(1/((1/resistencia_1_serie.value)+parseFloat(1/resistencia_2_serie.value)+parseFloat(1/resistencia_3_serie.value)+(1/resultado_paralelo_3))))*1000;
+            resultado.innerHTML="SOLUCION = "+resultado_final_8+" mF";
+        }else if(numero_resistencias_serie=="3" && numero_resistencias_paralelo=="4" && tipo_unidad=="MILIFARADIOS"){
+            var resultado_final_9=(parseFloat(1/((1/resistencia_1_serie.value)+parseFloat(1/resistencia_2_serie.value)+parseFloat(1/resistencia_3_serie.value)+(1/resultado_paralelo_4))))*1000;
+            resultado.innerHTML="SOLUCION = "+resultado_final_9+" mF";
+        }else if(numero_resistencias_serie=="4" && numero_resistencias_paralelo=="2" && tipo_unidad=="MILIFARADIOS"){
+            var resultado_final_10=(parseFloat(1/((1/resistencia_1_serie.value)+parseFloat(1/resistencia_2_serie.value)+parseFloat(1/resistencia_3_serie.value)+parseFloat(1/resistencia_4_serie.value)+(1/resultado_paralelo_2))))*1000;
+            resultado.innerHTML="SOLUCION = "+resultado_final_10+" mF";
+        }else if(numero_resistencias_serie=="4" && numero_resistencias_paralelo=="3" && tipo_unidad=="MILIFARADIOS"){
+            var resultado_final_11=(parseFloat(1/((1/resistencia_1_serie.value)+parseFloat(1/resistencia_2_serie.value)+parseFloat(1/resistencia_3_serie.value)+parseFloat(1/resistencia_4_serie.value)+(1/resultado_paralelo_3))))*1000;
+            resultado.innerHTML="SOLUCION = "+resultado_final_11+" mF";;
+        }else if(numero_resistencias_serie=="4" && numero_resistencias_paralelo=="4" && tipo_unidad=="MILIFARADIOS"){
+            var resultado_final_12=(parseFloat(1/((1/resistencia_1_serie.value)+parseFloat(1/resistencia_2_serie.value)+parseFloat(1/resistencia_3_serie.value)+parseFloat(1/resistencia_4_serie.value)+(1/resultado_paralelo_4))))*1000;
+            resultado.innerHTML="SOLUCION = "+resultado_final_12+" mF";
+        }
+
+    }//Finaliza la funcion calcular
+
+       
+     
+    </script>
+    <script src="../script.js"></script> 
+    <footer>
+        Aaron Mejia
+    </footer>
+</body>
+</html>

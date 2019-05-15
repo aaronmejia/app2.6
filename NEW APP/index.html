@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet"  href="estilos/estilos_menu.css">
+    <link rel="icon" href="imagenes/tcnm_2.png">
+     <!--Animacion css para texto-->
+     <link rel="stylesheet" href="estilos/animate.min.css">
+    <title>Menu</title>
+    <script type="text/javascript" src="jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript"src="javascript/Eleccion_circuitos.js"></script>
+    <script>
+            $(document).ready(function(){
+
+
+                    var opcion_1=$("#opcion_1");
+                    opcion_1.animate({
+                        marginLeft:"0%"
+                    },1000);
+
+                    var opcion_2=$("#opcion_2");
+                    opcion_2.animate({
+                        marginLeft:"0%"
+                    },1000);
+
+                    var opcion_3=$("#opcion_3");
+                    opcion_3.animate({
+                        marginLeft:"0%"
+                    },1000);
+
+                    var opcion_4=$("#opcion_4");
+                    opcion_4.animate({
+                        marginLeft:"0%"
+                    },1000);
+
+                    var opcion_5=$("#opcion_5");
+                    opcion_5.animate({
+                        marginLeft:"0%"
+                    },1000);
+
+                });     
+        
+    </script>
+</head>
+<body>
+   <header>
+        Menu
+    </header>
+    <div id="titulo">
+        <p class="animated zoomIn">CIRCUITOS A RESOLVER</p>
+    </div>
+    <div id="opcion_1" class="opciones">
+        <li>Circuitos inductivos</li>
+        <div id="inductivos">
+            <P>Elige el tipo del circuito:</P>
+            <a href="programas/inductivos_serie.html"><li>Serie</li></a>
+            <a href="programas/inductivos_paralelo.html"><li>Paralelo</li></a>
+            <a href="programas/inductivos_mixto.html"><li>Mixto</li></a>
+        </div>
+        <img class="boton_flecha" id="flecha_1" src="imagenes/boton_flecha_abajo.png">
+        <img class="boton_flecha" id="flecha_11" src="imagenes/boton_flecha_arriba.png">
+        <input id="boton_teoria_inductivos" type="button" value="Ver teoria">
+        <input id="boton_ocultar_teoria_inductivos" type="button" value="Ocultar teoria">
+        <div class="teoria" id="teoria_inductivos">
+            <p>¿QUE ES UN INDUCTOR?</p>
+            <P>Un inductor es un elemento pasivo diseñado para almacenar energia en su campo magnetico el cual consta de una bobina de alambre conductora.</P>
+        </div>
+    </div>
+    <div id="opcion_2" class="opciones">
+        <li>Circuitos capacitivos</li>
+        <div id="capacitivos">
+            <P>Elige el tipo del circuito:</P>
+            <a href="programas/capacitivos_serie.html"><li>Serie</li></a>
+            <a href="programas/capacitivos_paralelo.html"><li>Paralelo</li></a>
+            <a href="programas/capacitivo_mixto.html"><li>Mixto</li></a>
+         </div>
+        <img class="boton_flecha" id="flecha_2" src="imagenes/boton_flecha_abajo.png">
+        <img class="boton_flecha" id="flecha_22" src="imagenes/boton_flecha_arriba.png">
+        <input id="boton_teoria_capacitivos" type="button" value="Ver teoria">
+        <input id="boton_ocultar_teoria_capacitivos" type="button" value="Ocultar teoria">
+        <div class="teoria" id="teoria_capacitivos">
+            <P>¿QUE ES UN CAPACITOR?</P>
+            <p>Un capacitor es un elemento pasivo diseñado para almacenar energia en su campo electrico, compuesto por dos placas conductoras separadas por un aislante.</p>
+        </div>
+    </div>
+    <div id="opcion_3" class="opciones">
+        <li>Circuitos resistivos</li>
+        <div id="resistivos">
+            <P>Elige el tipo del circuito:</P>
+            <a href="programas/resistivos_serie.html"><li>Serie</li></a>
+            <a href="programas/resistivos_paralelo.html"><li>Paralelo</li></a>
+            <a href="programas/resistivos_mixtos.html"><li>Mixto</li></a>
+        </div>
+        <img class="boton_flecha" id="flecha_3" src="imagenes/boton_flecha_abajo.png">
+        <img class="boton_flecha" id="flecha_33" src="imagenes/boton_flecha_arriba.png">
+        <input id="boton_teoria_resistivos" type="button" value="Ver teoria">
+        <input id="boton_ocultar_teoria_resistivos" type="button" value="Ocultar teoria">
+        <div class="teoria" id="teoria_resistivos">
+                <P>¿QUE ES UN RESISTOR?</P>
+                <p>Se denomina resistencia o resistor al componente electrónico diseñado para introducir una resistencia eléctrica determinada entre dos puntos de un circuito eléctrico. En otros casos, como en las planchas, calentadores, etc. </p>
+        </div>
+    </div>
+    <div id="opcion_4" class="opciones">
+            <li>¿Como se usa?</li>
+            <div id="uso">
+                <p>Bienvenido, a solucion de circuitos ITCG:</p>
+                <p>¿Como se usa?</p>
+                <img class="instrucciones" src="imagenes/instrucciones_1.PNG">
+                <img class="instrucciones" src="imagenes/instrucciones_2.PNG">
+            </div>
+            <img class="boton_flecha" id="flecha_4" src="imagenes/boton_flecha_abajo.png">
+            <img class="boton_flecha" id="flecha_44" src="imagenes/boton_flecha_arriba.png">
+    </div>
+    <div id="opcion_5" class="opciones">
+        <li>Informacion personal</li>
+        <br/>
+        <div id="informacion_personal">
+            <center>
+                <p>INSTITUTO TECNOLOGICO DE CIUDAD GUZMAN</p>
+                <P>(Solucion de circuitos)</P>
+            </center>
+            <center> <img src="imagenes/itcg.jpg" width=" 15%"> </center>
+            <p>Carrera: Ingenieria Informatica</p>
+            <p>Alumno: Aaron Hernan Mejia Ceja</p>
+            <p>Materia: Fisica para informatica</p>
+            <p>Profesor: Lua Madrigal Favio Rey</p>
+        </div>
+        <img class="boton_flecha" id="flecha_5" src="imagenes/boton_flecha_abajo.png">
+        <img class="boton_flecha" id="flecha_55" src="imagenes/boton_flecha_arriba.png">
+    </div>
+
+    <script src="script.js"></script>   
+    <footer>
+        Desarrollado por Aaron Mejia
+    </footer>
+</body>
+</html>
